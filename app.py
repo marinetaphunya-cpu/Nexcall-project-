@@ -66,11 +66,15 @@ option = st.radio("ความต้องการ:", ["ขอน้ำ", "ข
 message = st.text_input("ระบุเพิ่มเติม:") if option == "อื่นๆ (พิมพ์เอง)" else option
 
 if st.button("ส่งข้อมูล"):
-        full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
-        requests.post(f"https://api.telegram.org/bot{st.secrets['TELEGRAM']['TOKEN']}/sendMessage", params={'chat_id': st.secrets['TELEGRAM']['CHAT_ID'], 'text': full_msg})
-        save_to_firestore(select_bed, patient_name, urgency, message)
-        st.success("ส่งคำขอเรียบร้อยแล้ว!")
-        st.rerun()
+    full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
+
+    # ใช้ requests.post ตรงนี้ (ตรวจสอบให้แน่ใจว่าเคาะ Tab เข้ามา 1 ครั้ง)
+    requests.post(f"https://api.telegram.org/bot{st.secrets['TELEGRAM']['TOKEN']}/sendMessage", params={'chat_id': st.secrets['TELEGRAM']['CHAT_ID'], 'text': full_msg})
+
+    save_to_firestore(select_bed, patient_name, urgency, message)
+    st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
+    st.rerun()
+
 
 
 
