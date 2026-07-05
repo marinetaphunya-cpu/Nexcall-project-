@@ -62,13 +62,17 @@ option = st.radio("ความต้องการ:", ["ขอน้ำ", "ข
 message = st.text_input("ระบุเพิ่มเติม:") if option == "อื่นๆ (พิมพ์เอง)" else option
 
 if st.button("ส่งข้อมูล"):
-    # ส่ง Telegram (เก็บไว้เหมือนเดิม)
-    TOKEN = '8871249436:AAFEqJ2sNQZLxvHV3PsC0nHg9BXKlln3q3E'
-    CHAT_ID = '8812758125'
-    full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
-    requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", params={'chat_id': CHAT_ID, 'text': full_msg})
+    # ดึงค่าจาก Secrets แทนการพิมพ์ตรงๆ
+    token = st.secrets["TELEGRAM"]["TOKEN"]
+    chat_id = st.secrets["TELEGRAM"]["CHAT_ID"]
     
-    # บันทึกลง Firestore
+    full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
+    
+    # ใช้ตัวแปร token และ chat_id ที่เราดึงมาจาก Secrets
+    requests.post(f"https://api.telegram.org/bot{token}/sendMessage", params={'chat_id': chat_id, 'text': full_msg})
+    
+    # บันทึกลง Firestore (อันเดิมที่ไอด้ามีอยู่แล้ว)
     save_to_firestore(select_bed, patient_name, urgency, message)
     st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
     st.rerun()
+
