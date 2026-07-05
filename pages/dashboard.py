@@ -10,11 +10,14 @@ import base64
 # --- ฟังก์ชันเล่นเสียง ---
 # เปลี่ยนฟังก์ชันเดิมเป็นอันนี้เจ้า
 def play_alert_sound():
-    try:
-        # ใช้ st.audio เล่นไฟล์ตรงๆ จากที่อยู่ในโฟลเดอร์ GitHub เลย
-        st.audio("alert.mp3", format="audio/mp3", autoplay=True)
-    except:
-        pass
+    js_code = """
+    <script>
+        var audio = new Audio('https://raw.githubusercontent.com/marinetaphunya-cpu/Nexcall-project-/main/alert.mp3');
+        audio.play();
+    </script>
+    """
+    st.components.v1.html(js_code, height=0)
+
 
 
 # --- เชื่อมต่อ Firebase ---
