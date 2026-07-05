@@ -72,7 +72,7 @@ if st.button("ส่งข้อมูล"):
     requests.post(f"https://api.telegram.org/bot{st.secrets['TELEGRAM']['TOKEN']}/sendMessage", params={'chat_id': st.secrets['TELEGRAM']['CHAT_ID'], 'text': full_msg})
 
     save_to_firestore(select_bed, patient_name, urgency, message)
-    st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
+    st.success("ส่งคำขอเรียบร้อยแล้วค่ะ!")
     st.rerun()
 
 
