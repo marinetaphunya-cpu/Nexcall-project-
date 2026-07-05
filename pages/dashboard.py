@@ -42,10 +42,12 @@ if calls:
     df = pd.DataFrame(calls)
     
     # --- ฟังก์ชันคลุมแถบสีเทาให้แถวที่ตอบแล้ว ---
+        # --- ฟังก์ชันคุมแถบสีเทา (เฉพาะที่ตอบแล้วเท่านั้น) ---
     def highlight_replied(row):
-        # ถ้ามี reply_message ให้ใส่สีพื้นหลังเป็นสีเทา (#d3d3d3)
-        if row.get('reply_message'):
-            return ['background-color: #d3d3d3'] * len(row)
+        # ตรวจสอบว่าช่อง reply_message มีข้อมูลและไม่ใช่ค่าว่างหรือคำว่า None
+        val = row.get('reply_message')
+        if val is not None and val != "" and val != "None":
+            return ['background-color: #e1bee7'] * len(row)
         else:
             return [''] * len(row)
 
