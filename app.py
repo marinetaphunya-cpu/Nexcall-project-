@@ -72,11 +72,9 @@ if st.button("ส่งข้อมูล"):
     # ก่อนจะสั่ง requests ให้ประกาศตัวแปร 2 ตัวนี้ก่อน
 my_bot_token = st.secrets["TELEGRAM"]["TOKEN"]
 my_chat_id = st.secrets["TELEGRAM"]["CHAT_ID"]
-
-# แล้วใช้ตัวแปรนี้แทนใน request เลยเจ้า
-requests.post(f"https://api.telegram.org/bot{my_bot_token}/sendMessage", 
-              params={'chat_id': my_chat_id, 'text': full_msg})
-
+# แก้บรรทัด 77 และ 78 ให้เป็นแบบนี้เจ้า (จำไว้ว่าต้องเคาะเยื้องให้ตรงกับบรรทัดก่อนหน้าด้วยนะเจ้า)
+requests.post(f"https://api.telegram.org/bot{st.secrets['TELEGRAM']['TOKEN']}/sendMessage", 
+              params={'chat_id': st.secrets['TELEGRAM']['CHAT_ID'], 'text': full_msg})
 
     
 save_to_firestore(select_bed, patient_name, urgency, message)
