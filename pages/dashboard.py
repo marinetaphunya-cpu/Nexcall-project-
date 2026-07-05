@@ -56,7 +56,7 @@ if calls:
     # จัดการเรื่องเวลาในที่เดียวจบ: บวก 7 ชม. และแสดงแค่เวลา (ชม:นาที:วินาที)
     if 'timestamp' in df.columns:
         df['timestamp'] = pd.to_datetime(df['timestamp']) + timedelta(hours=7)
-        df['timestamp'] = df['timestamp'].dt.strftime('%H:%M:%S')
+        df['timestamp'] = df['timestamp'].dt.strftime('%d/%m/Y %H:%M:%S')
  
     # --- ฟังก์ชันคลุมแถบสีเทาให้แถวที่ตอบแล้ว ---
         # --- ฟังก์ชันคุมแถบสีเทา (เฉพาะที่ตอบแล้วเท่านั้น) ---
