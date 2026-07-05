@@ -10,21 +10,9 @@ import base64
 # --- ฟังก์ชันเล่นเสียง ---
 # เปลี่ยนฟังก์ชันเดิมเป็นอันนี้เจ้า
 def play_alert_sound():
-    js_code = """
-    <script>
-        // ขออนุญาตส่งการแจ้งเตือนก่อน
-        if (Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
-        
-        // ส่งการแจ้งเตือนไปที่หน้าจอ iPad
-        new Notification("แจ้งเตือน NexCall!", {
-            body: "มีคนไข้กดเรียกพยาบาลค่ะ!",
-            icon: "https://cdn-icons-png.flaticon.com/512/3063/3063183.png"
-        });
-    </script>
-    """
-    st.components.v1.html(js_code, height=0)
+    # วิธีนี้คือการเด้งเตือนที่มุมจอ และมีเสียงของ Streamlit เองเจ้า
+    st.toast("🚨 มีคนไข้กดเรียกพยาบาล!", icon="🚨")
+
 
 
 
