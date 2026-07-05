@@ -45,17 +45,14 @@ if not st.session_state["nurse_logged_in"]:
 st.title("🏥 ศูนย์บัญชาการพยาบาล - NexCall Dashboard")
 
 # 1. ดึงข้อมูลแบบเรียบง่าย (แก้เรื่อง Index แล้วเจ้า)
-calls_ref = db.collection('nurse_calls').order_by("timestamp", direction=firestore.Query.DESCENDING).limit(20)
-calls = [doc.to_dict() for doc in calls_ref.stream()]
-
-# 1. ดึงข้อมูลจาก Firestore และแสดงผล
-calls_ref = db.collection('nurse_calls').order_by("timestamp", direction=firestore.Query.DESCENDING).limit(20)
-calls = [doc.to_dict() for doc in calls_ref.stream()]
-
 if calls:
-    import pandas as pd
     df = pd.DataFrame(calls)
-    
+        
+    # จัดการเรื่องเวลาในที่เดียวจบ: บวก 7 ชม. และแสดงแค่เวลา (ชม:นาที:วินาที)
+    if 'timestamp' in df.columns:
+        df['timestamp'] = pd.to_datetime(df['timestamp']) + timedelta(hours=7)
+        df['timestamp'] = df['timestamp'].dt.strftime('%H:%M:%S')
+ 
     # --- ฟังก์ชันคลุมแถบสีเทาให้แถวที่ตอบแล้ว ---
         # --- ฟังก์ชันคุมแถบสีเทา (เฉพาะที่ตอบแล้วเท่านั้น) ---
         # --- ฟังก์ชันคุมสี: ม่วงถ้าตอบแล้ว, ชมพูถ้ายังไม่ตอบ ---
