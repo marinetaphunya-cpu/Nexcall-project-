@@ -43,13 +43,20 @@ if calls:
     
     # --- ฟังก์ชันคลุมแถบสีเทาให้แถวที่ตอบแล้ว ---
         # --- ฟังก์ชันคุมแถบสีเทา (เฉพาะที่ตอบแล้วเท่านั้น) ---
+        # --- ฟังก์ชันคุมสี: ม่วงถ้าตอบแล้ว, ชมพูถ้ายังไม่ตอบ ---
     def highlight_replied(row):
-        # ตรวจสอบว่าช่อง reply_message มีข้อมูลและไม่ใช่ค่าว่างหรือคำว่า None
         val = row.get('reply_message')
-        if val is not None and val != "" and val != "None":
+        
+        # เช็คว่าตอบแล้วหรือไม่ (ถ้าตอบแล้ว = ม่วง)
+        is_replied = (val is not None) and (str(val).lower() != 'none') and (str(val).strip() != '')
+        
+        if is_replied:
+            # ม่วงพาสเทล (ตอบแล้ว)
             return ['background-color: #e1bee7'] * len(row)
         else:
-            return [''] * len(row)
+            # ชมพูพาสเทล (รอตอบ/งานใหม่)
+            return ['background-color: #f8bbd0'] * len(row)
+
 
     st.subheader("สถานะเตียงในวอร์ด (ล่าสุด)")
     # ใช้ style.apply เพื่อลงสี
