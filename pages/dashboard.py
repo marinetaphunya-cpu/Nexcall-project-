@@ -44,7 +44,7 @@ if calls:
     st.subheader("สถานะเตียงในวอร์ด (ล่าสุด)")
     st.dataframe(df.style.apply(highlight_replied, axis=1), use_container_width=True)
 else:
-    st.info("ยังไม่มีคำขอเข้ามาในระบบเจ้า")
+    st.info("ยังไม่มีคำขอเข้ามาในระบบ")
 
 st.divider()
 st.subheader("💬 ระบบตอบกลับคนไข้")
@@ -66,7 +66,7 @@ if st.button("ส่งข้อความ"):
     if docs:
         doc_id = docs[0].id
         db.collection('nurse_calls').document(doc_id).update({"reply_message": reply_text})
-        st.success(f"ตอบกลับ {target_bed_str} เรียบร้อยแล้วเจ้า!")
+        st.success(f"ตอบกลับ {target_bed_str} เรียบร้อยแล้วค่ะ!")
         st.rerun()
     else:
         st.warning(f"ไม่พบรายการที่ค้างตอบของ {target_bed_str} เจ้า")
