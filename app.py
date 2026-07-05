@@ -79,9 +79,9 @@ requests.post(f"https://api.telegram.org/bot{my_bot_token}/sendMessage",
 
 
     
-    save_to_firestore(select_bed, patient_name, urgency, message)
-    st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
-    st.rerun()
+save_to_firestore(select_bed, patient_name, urgency, message)
+st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
+st.rerun()
 
 
 
