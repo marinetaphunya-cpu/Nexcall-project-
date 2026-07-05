@@ -12,11 +12,20 @@ import base64
 def play_alert_sound():
     js_code = """
     <script>
-        var audio = new Audio('https://raw.githubusercontent.com/marinetaphunya-cpu/Nexcall-project-/main/alert.mp3');
-        audio.play();
+        // ขออนุญาตส่งการแจ้งเตือนก่อน
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+        
+        // ส่งการแจ้งเตือนไปที่หน้าจอ iPad
+        new Notification("แจ้งเตือน NexCall!", {
+            body: "มีคนไข้กดเรียกพยาบาลค่ะ!",
+            icon: "https://cdn-icons-png.flaticon.com/512/3063/3063183.png"
+        });
     </script>
     """
     st.components.v1.html(js_code, height=0)
+
 
 
 
