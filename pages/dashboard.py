@@ -3,6 +3,8 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 import json
+import time
+
 
 # --- เชื่อมต่อ Firebase (แก้ตรงนี้เจ้า) ---
 if not firebase_admin._apps:
@@ -109,4 +111,5 @@ if st.button("ส่งข้อความ"):
 
 if st.button('🔁 อัปเดตข้อมูล'):
     st.rerun()
-
+time.sleep(5)
+st.rerun()
