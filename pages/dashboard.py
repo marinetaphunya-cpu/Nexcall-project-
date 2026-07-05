@@ -55,18 +55,21 @@ if calls:
     # --- ฟังก์ชันคลุมแถบสีเทาให้แถวที่ตอบแล้ว ---
         # --- ฟังก์ชันคุมแถบสีเทา (เฉพาะที่ตอบแล้วเท่านั้น) ---
         # --- ฟังก์ชันคุมสี: ม่วงถ้าตอบแล้ว, ชมพูถ้ายังไม่ตอบ ---
+        # --- ฟังก์ชันคุมสี: ม่วงถ้าตอบแล้ว, ชมพูถ้ายังไม่ตอบ (ฉบับแก้บั๊ก None) ---
     def highlight_replied(row):
         val = row.get('reply_message')
         
-        # เช็คว่าตอบแล้วหรือไม่ (ถ้าตอบแล้ว = ม่วง)
-        is_replied = (val is not None) and (str(val).lower() != 'none') and (str(val).strip() != '')
+        # แปลงเป็น string แล้วตัดช่องว่างออก
+        val_str = str(val).strip()
         
-        if is_replied:
+        # เงื่อนไข: ถ้าเป็นค่าว่าง, เป็นคำว่า 'None', หรือเป็น 'nan' -> ให้มองว่ายังไม่ได้ตอบ
+        if val_str == "" or val_str.lower() == "none" or val_str.lower() == "nan":
+            # ชมพูพาสเทล (รอตอบ)
+            return ['background-color: #fce4ec'] * len(row)
+        else:
             # ม่วงพาสเทล (ตอบแล้ว)
             return ['background-color: #e1bee7'] * len(row)
-        else:
-            # ชมพูพาสเทล (รอตอบ/งานใหม่)
-            return ['background-color: #f8bbd0'] * len(row)
+
 
 
     st.subheader("สถานะเตียงในวอร์ด (ล่าสุด)")
