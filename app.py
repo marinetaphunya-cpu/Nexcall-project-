@@ -69,7 +69,7 @@ if st.button("ส่งข้อมูล"):
     full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
     
     # ใส่โค้ดนี้ตรงๆ เลยเจ้า (ใช้ st.secrets["TOKEN"] และ st.secrets["CHAT_ID"])
-        requests.post(f"https://api.telegram.org/bot{st.secrets['TELEGRAM']['TOKEN']}/sendMessage", 
+    requests.post(f"https://api.telegram.org/bot{st.secrets['TELEGRAM']['TOKEN']}/sendMessage", 
                   params={'chat_id': st.secrets['TELEGRAM']['CHAT_ID'], 'text': full_msg})
 
     
