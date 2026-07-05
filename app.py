@@ -16,6 +16,9 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
+# ดึงค่าไว้ตั้งแต่เริ่มรันแอปเลยเจ้า
+TELEGRAM_TOKEN = st.secrets["TELEGRAM"]["TOKEN"]
+TELEGRAM_CHAT_ID = st.secrets["TELEGRAM"]["CHAT_ID"]
 
 
 # --- ฟังก์ชัน ---
