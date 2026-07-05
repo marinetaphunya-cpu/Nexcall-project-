@@ -73,6 +73,6 @@ if st.button("ส่งข้อมูล"):
     
     # บันทึกลง Firestore (อันเดิมที่ไอด้ามีอยู่แล้ว)
     save_to_firestore(select_bed, patient_name, urgency, message)
-    st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
+    st.success("ส่งคำขอเรียบร้อยแล้วค่ะ!")
     st.rerun()
 
