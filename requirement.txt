@@ -1,15 +1,22 @@
 import streamlit as st
-import pandas as pd
-import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
-import requests
+import json
 
 # --- เชื่อมต่อ Firebase ---
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase-key.json")
+    # ดึงกุญแจมาจาก Secrets ที่เราตั้งไว้ในหน้าเว็บ Streamlit
+    key_dict = st.secrets["FIREBASE"]
+    
+    # ถ้าค่าเป็น Dictionary อยู่แล้วให้ใช้ได้เลย แต่ถ้าเป็น String ให้แปลงเป็น dict
+    if isinstance(key_dict, str):
+        key_dict = json.loads(key_dict)
+        
+    cred = credentials.Certificate(dict(key_dict))
     firebase_admin.initialize_app(cred)
+
 db = firestore.client()
+
 
 # --- ฟังก์ชัน ---
 def save_to_firestore(bed, name, urgency, message):
