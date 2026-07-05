@@ -8,19 +8,14 @@ from datetime import timedelta
 import base64
 
 # --- ฟังก์ชันเล่นเสียง ---
+# เปลี่ยนฟังก์ชันเดิมเป็นอันนี้เจ้า
 def play_alert_sound():
     try:
-        with open("alert.mp3", "rb") as f:
-            data = f.read()
-            b64 = base64.b64encode(data).decode()
-            audio_html = f"""
-                <audio autoplay="true">
-                <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-                </audio>
-            """
-            st.markdown(audio_html, unsafe_allow_html=True)
+        # ใช้ st.audio เล่นไฟล์ตรงๆ จากที่อยู่ในโฟลเดอร์ GitHub เลย
+        st.audio("alert.mp3", format="audio/mp3", autoplay=True)
     except:
-        pass 
+        pass
+
 
 # --- เชื่อมต่อ Firebase ---
 if not firebase_admin._apps:
