@@ -33,13 +33,28 @@ st.title("🏥 ศูนย์บัญชาการพยาบาล - NexCa
 calls_ref = db.collection('nurse_calls').order_by("timestamp", direction=firestore.Query.DESCENDING).limit(20)
 calls = [doc.to_dict() for doc in calls_ref.stream()]
 
+# 1. ดึงข้อมูลจาก Firestore และแสดงผล
+calls_ref = db.collection('nurse_calls').order_by("timestamp", direction=firestore.Query.DESCENDING).limit(20)
+calls = [doc.to_dict() for doc in calls_ref.stream()]
+
 if calls:
     import pandas as pd
     df = pd.DataFrame(calls)
+    
+    # --- ฟังก์ชันคลุมแถบสีเทาให้แถวที่ตอบแล้ว ---
+    def highlight_replied(row):
+        # ถ้ามี reply_message ให้ใส่สีพื้นหลังเป็นสีเทา (#d3d3d3)
+        if row.get('reply_message'):
+            return ['background-color: #d3d3d3'] * len(row)
+        else:
+            return [''] * len(row)
+
     st.subheader("สถานะเตียงในวอร์ด (ล่าสุด)")
-    st.dataframe(df, use_container_width=True)
+    # ใช้ style.apply เพื่อลงสี
+    st.dataframe(df.style.apply(highlight_replied, axis=1), use_container_width=True)
 else:
     st.info("ยังไม่มีคำขอเข้ามาในระบบ")
+
 
 st.divider()
 st.subheader("💬 ระบบตอบกลับคนไข้")
