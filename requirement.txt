@@ -1,0 +1,67 @@
+import streamlit as st
+import pandas as pd
+import datetime
+import firebase_admin
+from firebase_admin import credentials, firestore
+import requests
+
+# --- เชื่อมต่อ Firebase ---
+if not firebase_admin._apps:
+    cred = credentials.Certificate("firebase-key.json")
+    firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# --- ฟังก์ชัน ---
+def save_to_firestore(bed, name, urgency, message):
+    current_time = datetime.datetime.now()
+    data = {
+        "bed_id": bed, 
+        "patient_name": name, 
+        "urgency": urgency, 
+        "message": message, 
+        "timestamp": current_time,
+        "status": "waiting",
+        "reply_message": None
+    }
+    db.collection('nurse_calls').add(data)
+
+# --- หน้าจอหลัก ---
+patient_db = {
+    "เตียง1": "นาย หมอต้าเบี้ยว", "เตียง2": "นาย เกย์ent", "เตียง3": "นางสาว ไอด้า",
+    "เตียง4": "นาย ยุก", "เตียง5": "นางสาว แคท", "เตียง6": "นาย แมว",
+    "เตียง7": "นาย บูม", "เตียง8": "นาง แก้ว", "เตียง9": "นาย คำ", "เตียง10": "นาย วี"
+}
+
+st.title("NexCall - เลือกเตียง")
+select_bed = st.selectbox("กรุณาเลือกเตียง:", list(patient_db.keys()))
+patient_name = patient_db[select_bed]
+st.info(f"ผู้ป่วย: {patient_name} ({select_bed})")
+
+# 1. ตรวจสอบสถานะและข้อความจากพยาบาล (ดึงข้อมูลเรียลไทม์)
+calls_ref = db.collection('nurse_calls').where("bed_id", "==", select_bed).order_by("timestamp", direction=firestore.Query.DESCENDING).limit(1)
+last_call = next(calls_ref.stream(), None)
+
+if last_call:
+    call_data = last_call.to_dict()
+    if call_data.get('reply_message'):
+        st.success(f"พยาบาลตอบกลับมาว่า: {call_data['reply_message']}")
+    else:
+        st.info("⏳ ระบบได้รับคำขอแล้ว กำลังรอพยาบาลตรวจสอบนะคะ...")
+
+# 2. ระบบ Triage & ส่งข้อมูล
+st.subheader("ระดับความด่วน")
+urgency = st.radio("เลือกความเร่งด่วน:", ["🟢 ปกติ", "🟡 กึ่งด่วน", "🔴 ฉุกเฉิน"])
+option = st.radio("ความต้องการ:", ["ขอน้ำ", "ขอห้องน้ำ", "ปวดหลัง", "อื่นๆ (พิมพ์เอง)"])
+message = st.text_input("ระบุเพิ่มเติม:") if option == "อื่นๆ (พิมพ์เอง)" else option
+
+if st.button("ส่งข้อมูล"):
+    # ส่ง Telegram (เก็บไว้เหมือนเดิม)
+    TOKEN = '8871249436:AAFEqJ2sNQZLxvHV3PsC0nHg9BXKlln3q3E'
+    CHAT_ID = '8812758125'
+    full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
+    requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", params={'chat_id': CHAT_ID, 'text': full_msg})
+    
+    # บันทึกลง Firestore
+    save_to_firestore(select_bed, patient_name, urgency, message)
+    st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
+    st.rerun()
