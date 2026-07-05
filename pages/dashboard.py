@@ -45,8 +45,13 @@ if not st.session_state["nurse_logged_in"]:
 st.title("🏥 ศูนย์บัญชาการพยาบาล - NexCall Dashboard")
 
 # 1. ดึงข้อมูลแบบเรียบง่าย (แก้เรื่อง Index แล้วเจ้า)
+# --- แก้ไขบรรทัดที่ 47-49 ให้เป็นแบบนี้เจ้า ---
+calls_ref = db.collection('nurse_calls').order_by("timestamp", direction=firestore.Query.DESCENDING).limit(20)
+calls = [doc.to_dict() for doc in calls_ref.stream()]
+
 if calls:
     df = pd.DataFrame(calls)
+    # ... ต่อด้วยโค้ดเวลาของไอด้าที่ทำไว้ดีแล้ว ...
         
     # จัดการเรื่องเวลาในที่เดียวจบ: บวก 7 ชม. และแสดงแค่เวลา (ชม:นาที:วินาที)
     if 'timestamp' in df.columns:
