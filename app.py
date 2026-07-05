@@ -65,15 +65,16 @@ option = st.radio("ความต้องการ:", ["ขอน้ำ", "ข
 message = st.text_input("ระบุเพิ่มเติม:") if option == "อื่นๆ (พิมพ์เอง)" else option
 
 if st.button("ส่งข้อมูล"):
-    # ไม่ต้องประกาศ token ใหม่ข้างในนี้แล้วเจ้า
+    # บรรทัดนี้ไม่ต้องประกาศตัวแปรแล้วนะเจ้า
     full_msg = f"{urgency}\n🔔 แจ้งเตือนจาก {select_bed}\n👤 ผู้ป่วย: {patient_name}\n💬: {message}"
-
-    # เรียกใช้ตัวแปรที่ประกาศไว้ข้างบนได้เลยเจ้า
-    requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", 
-                  params={'chat_id': TELEGRAM_CHAT_ID, 'text': full_msg})
-
+    
+    # ใส่โค้ดนี้ตรงๆ เลยเจ้า (ใช้ st.secrets["TOKEN"] และ st.secrets["CHAT_ID"])
+    requests.post(f"https://api.telegram.org/bot{st.secrets['TOKEN']}/sendMessage", 
+                  params={'chat_id': st.secrets['CHAT_ID'], 'text': full_msg})
+    
     save_to_firestore(select_bed, patient_name, urgency, message)
     st.success("ส่งคำขอเรียบร้อยแล้วเจ้า!")
     st.rerun()
+
 
 
