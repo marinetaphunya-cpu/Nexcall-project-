@@ -1,15 +1,26 @@
 import streamlit as st
+import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 import json
 
-# --- เชื่อมต่อ Firebase ---
+# --- เชื่อมต่อ Firebase (แก้ตรงนี้เจ้า) ---
 if not firebase_admin._apps:
-    key_dict = st.secrets["FIREBASE"])
+    # ถ้าค่าใน secrets เป็น string ที่เป็น json อยู่แล้วให้ใช้ json.loads
+    # แต่ถ้าเป็น dict อยู่แล้ว ให้ใช้ st.secrets["FIREBASE"] เลย
+    try:
+        # ลองแบบที่ 1 (ถ้าเป็นข้อความ JSON)
+        key_dict = json.loads(st.secrets["FIREBASE"])
+    except:
+        # ลองแบบที่ 2 (ถ้าเป็น Dictionary อยู่แล้ว)
+        key_dict = st.secrets["FIREBASE"]
+        
     cred = credentials.Certificate(dict(key_dict))
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
+# ต่อจากนี้คือโค้ด Dashboard ของไอด้า...
+
 
 # --- ระบบล็อกอินพยาบาล ---
 if "nurse_logged_in" not in st.session_state:
