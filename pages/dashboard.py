@@ -4,6 +4,8 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import json
 import time
+import pandas as pd
+from datetime import timedelta
 
 
 # --- เชื่อมต่อ Firebase (แก้ตรงนี้เจ้า) ---
